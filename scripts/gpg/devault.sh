@@ -2,21 +2,21 @@
 set -euo pipefail
 
 print_usage() {
-	cat <<EOF
-Usage: $0 <command> [args]
+	cat <<-'EOF'
+	Usage: devault.sh <command> [args]
 
-Commands:
-	install                 Install GnuPG if not present
-	encrypt <in> [out] [recipient]
-						Encrypt file. If recipient is provided uses public-key
-						encryption, otherwise uses symmetric encryption.
-	decrypt <in> [out]      Decrypt file to output path (defaults to <in>.decrypted)
-	import-key <keyfile>    Import a private OpenPGP key (armored PEM) into the local GPG keyring
-						Accepts files containing a "BEGIN PGP PRIVATE KEY BLOCK" and runs `gpg --import`.
-						If the file is a raw PEM RSA/PKCS key (BEGIN RSA PRIVATE KEY / BEGIN PRIVATE KEY)
-						the script will not convert it; see comments in the script for guidance.
-	help                    Show this message
-EOF
+	Commands:
+		install                 Install GnuPG if not present
+		encrypt <in> [out] [recipient]
+							Encrypt file. If recipient is provided uses public-key
+							encryption, otherwise uses symmetric encryption.
+		decrypt <in> [out]      Decrypt file to output path (defaults to <in>.decrypted)
+		import-key <keyfile>    Import a private OpenPGP key (armored PEM) into the local GPG keyring
+							Accepts files containing a "BEGIN PGP PRIVATE KEY BLOCK" and runs `gpg --import`.
+							If the file is a raw PEM RSA/PKCS key (BEGIN RSA PRIVATE KEY / BEGIN PRIVATE KEY)
+							the script will not convert it; see comments in the script for guidance.
+		help                    Show this message
+	EOF
 }
 
 install_gpg() {
@@ -118,10 +118,13 @@ decrypt_file() {
 	echo "Decrypted: $outfile"
 }
 
-if [ ${#@} -eq 0 ]; then
+echo "GPG Devault Script"
+if [ $# -eq 0 ]; then
 	print_usage
 	exit 1
 fi
+
+echo "Running command: $*"
 
 cmd="$1"; shift || true
 
