@@ -4,12 +4,16 @@ set -euo pipefail
 print_usage() {
 	cat <<-'EOF'
 	Usage: devault.sh <command> [args]
+	       devault.sh -e <in> [out] [recipient]
+	       devault.sh -d <in> [out]
 
 	Commands:
 		install                 Install GnuPG if not present
+		-e                      Alias for encrypt
 		encrypt <in> [out] [recipient]
 							Encrypt file. If recipient is provided uses public-key
 							encryption, otherwise uses symmetric encryption.
+		-d                      Alias for decrypt
 		decrypt <in> [out]      Decrypt file to output path (defaults to <in>.decrypted)
 		import-key <keyfile>    Import a private OpenPGP key (armored PEM) into the local GPG keyring
 							Accepts files containing a "BEGIN PGP PRIVATE KEY BLOCK" and runs `gpg --import`.
@@ -132,7 +136,7 @@ case "$cmd" in
 	install)
 		install_gpg
 		;;
-	encrypt)
+	encrypt|-e)
 		if [ ${#@} -lt 1 ]; then
 			echo "encrypt requires at least an input file" >&2
 			print_usage
@@ -140,7 +144,7 @@ case "$cmd" in
 		fi
 		encrypt_file "$@"
 		;;
-	decrypt)
+	decrypt|-d)
 		if [ ${#@} -lt 1 ]; then
 			echo "decrypt requires at least an input file" >&2
 			print_usage
